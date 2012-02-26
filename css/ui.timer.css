@@ -1,0 +1,17 @@
+.ui-timer {
+    width: 250px;
+    height: 50px;
+}
+
+.ui-timer .pause-button {
+    float: left;
+    width: 75px;
+    height: 25px;
+    font-size: 12px;
+    margin: 10px;
+}
+
+.ui-timer .timer-display {
+    float: left;
+    margin: 10px;
+}
