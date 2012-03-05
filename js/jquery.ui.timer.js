@@ -1,7 +1,7 @@
 (function($) {
     $.widget("ui.timer", {
         options: {
-          seconds: 0,
+          initial_seconds: 0,
           hidden_selector: null,
           autostart: true
         },
@@ -16,7 +16,7 @@
 
             this._createButton();
 
-            this.extraTime = this.options.seconds * 1000;
+            this.extraTime = this.options.initial_seconds * 1000;
             this.active = false;
 
             this.refresh();

@@ -10,8 +10,9 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#timer').timer();
-                $('#another_timer').timer({autostart: false});
-                $('#yet_another_timer').timer({seconds:60, hidden_selector: "#time_input"});
+                $('#another_timer').timer({ autostart: false });
+                $('#yet_another_timer').timer({ initial_seconds:60,
+                                               hidden_selector: "#time_input" });
             });
         </script>
     </head>
