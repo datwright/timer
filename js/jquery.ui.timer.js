@@ -2,8 +2,8 @@
     $.widget("ui.timer", {
         options: {
           seconds: 0,
-          width: 250,
-          height: 50
+          hidden_selector: null,
+          autostart: true
         },
 
         _create: function() {
@@ -14,12 +14,21 @@
 
             $(this.element).append(this.timeDisplayElement);
 
-            this._drawPauseButton();
+            this._createButton();
 
             this.extraTime = this.options.seconds * 1000;
-
             this.active = false;
-            this.start();
+
+            this.refresh();
+
+            if (this.options["autostart"]) {
+                this.start();
+            }
+        },
+
+        refresh: function() {
+            this._refreshTime();
+            this._redrawTime();
         },
 
         toggle: function() {
@@ -27,20 +36,19 @@
         },
 
         stop: function() {
-            $(this.buttonElement).button({label: "Resume"});
             clearInterval(this.intervalId);
             this.extraTime += this._elapsedMillisecondsSinceStart();
+
             this.active = false;
+            this._setButton();
         },
 
         start: function() {
             this.active = true;
-            $(this.buttonElement).button({label: "Pause"});
+            this._setButton();
             this.startTime = this._getCurrentTime();
-            self = this;
             this.intervalId = setInterval($.proxy(function() {
-                this._refreshTime();
-                this._redrawTime();
+                this.refresh();
             },this), 100);
         },
 
@@ -61,8 +69,18 @@
 
         _refreshTime: function() {
             var displayTime = this.seconds();
+
             this.displayMinutes = Math.floor(displayTime / 60);
             this.displaySeconds = Math.floor(displayTime % 60);
+
+            if (this.options["hidden_selector"]) {
+                value = Math.floor(displayTime);
+                el = $(this.options["hidden_selector"]);
+
+                if (el.attr("value") != value) {
+                    el.attr("value", value);
+                }
+            }
         },
 
         _redrawTime: function() {
@@ -73,18 +91,29 @@
             $(this.timeDisplayElement).text(timeText);
         },
 
-        _drawPauseButton: function() {
-            this.buttonElement = document.createElement("button");
+        _createButton: function() {
+            this.buttonContainer = document.createElement("div");
+            $(this.buttonContainer).addClass("pause-button-container");
 
+            this.buttonElement = document.createElement("div");
             $(this.buttonElement).addClass("pause-button");
 
-            $(this.element).append(this.buttonElement);
+            $(this.element).append(this.buttonContainer);
+            $(this.buttonContainer).append(this.buttonElement);
 
-            $(this.buttonElement).button();
-            self = this;
+            this._setButton();
+
             $(this.buttonElement).click($.proxy(function() {
                 this.toggle();
             },this));
+        },
+
+        _getButtonLabel: function() {
+            return this.active ? "Pause" : "Resume";
+        },
+
+        _setButton: function() {
+            $(this.buttonElement).button({ label: this._getButtonLabel() });
         },
 
         _padZero: function(number) {

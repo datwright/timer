@@ -10,7 +10,8 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#timer').timer();
-                $('#another_timer').timer({seconds:60});
+                $('#another_timer').timer({autostart: false});
+                $('#yet_another_timer').timer({seconds:60, hidden_selector: "#time_input"});
             });
         </script>
     </head>
@@ -18,6 +19,9 @@
     <body>
         <div id="timer"></div>
         <div id="another_timer"></div>
+        <div id="yet_another_timer"></div>
+
+        <input id="time_input" type="hidden" name="elapsed_time" value=""/>
     </body>
 </html>
 
